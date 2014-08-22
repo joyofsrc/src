@@ -1,0 +1,20 @@
+{
+	"hst":"",
+	"dbNme":"",
+	"dbUsr":"",
+	"dbPss":"",
+	"dbKey":"",
+	"dbPrt":0,
+	"dbSck":"",
+	"xCache":1,
+	"ttl":86400,
+	"sprUsr":"",
+	"sprPss":"",
+	"sprNme":"",
+	"cor":["Dta","Std","Var","Usr","ImgC","Pge","Scss"],
+	"lcl":[],
+	"hnySrv":"",
+	"hnyKey":"",
+	"hnyFile":"",
+	"static":""
+}
