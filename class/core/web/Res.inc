@@ -63,30 +63,53 @@ class cwRes {
 						"ext"=>$v["dta"]["ext"]
 				)));
 				if(!$img){die();}
-				$i["dims"]=getimagesize($v["dta"]["src"]."/".$v["dta"]["nme"].".png");
-				$ic=$this->ImgC->name($this->ImgC->Var->Std->o["bc"][2]);				
+				$dims=getimagesize($v["dta"]["src"]."/".$v["dta"]["nme"].".png");
+				$ic=$this->ImgC->name($this->ImgC->Var->Std->o["bc"][2]);
+				$ic['x']=$ic['x']*2;
+				$ic['y']=$ic['y']*2;
 				if($ic['x']!=0 || $ic['y']!=0){
-					$dims=getimagesize($v["dta"]["src"]."/".$v["dta"]["nme"].".png");
-					$ic=$this->ImgC->name($this->ImgC->Var->Std->o["bc"][2]);
-					if($ic["dims"][0]==0){
-						/* scale width proportional to height */
-						$ratio = array(
-								"x"=>($ic["dims"][1]/100)*$ic["dims"][0],
-								"y"=>1
-							);
-						
-					} elseif($r["dims"][1]==0){
-						/* scale height proportional to width */
-						$ratio = array(
-								"x"=>1,
-								"y"=>($ic["dims"][0]/100)*$ic["dims"][1]
-							);
+					if($ic['x']==0){
+						/* TODO  - scale crop code */
+					} elseif($ic['y']==0){
+						/* TODO  - scale crop code */
 					} else {
-						/* scale and crop to new aspect ratio */
 						$ratio = array(
-							"x"=>1,
-							"y"=>1
+							'x'=>(1/$dims[1])*$dims[0],
+							'y'=>(1/$dims[0])*$dims[1]
 						);
+						$scale =array(
+							'x'=>$ic['y']*$ratio['x'],
+							'y'=>$ic['x']*$ratio['y']
+						);
+						$resize = array(
+							'x'=>$ic['x']-$scale['x'],
+							'y'=>$ic['y']-$scale['y']
+						);
+						if($resize['x']<0 || $resize['y']<0){
+							$resize['x']<0 ? $resize='y':$resize='x';
+						} else {
+							$resize['x']>$resize['y'] ? $resize='y':$resize='x';
+						}
+						if($resize['x']){
+							$size=array(
+								'x'=>ceil($scale['x']),
+								'y'=>$ic['y']
+							);
+						} else {
+							$size=array(
+								'x'=>$ic['x'],
+								'y'=>ceil($scale['y'])
+							);
+						}
+						/* TODO - fix black border at bottom of image (scaling is going wrong) */
+						$img = imagecreatefrompng($v["dta"]["src"]."/".$v["dta"]["nme"].".png");
+						$img = imagescale($img, $size['x'], $size['y'],  IMG_BICUBIC);
+						$img = imagecrop($img,array(
+							'x'=>($size['x']-$ic['x'])/2,
+							'y'=>($size['y']-$ic['y'])/2,
+							'width'=>$ic['x'],
+							'height'=>$ic['y']
+						));
 					}
 				} else {
 					$img = imagecreatefrompng($v["dta"]["src"]."/".$v["dta"]["nme"].".png");
