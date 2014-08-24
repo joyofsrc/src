@@ -69,67 +69,52 @@ class cwRes {
 				$ic['y']=$ic['y']*2;
 				if($ic['x']!=0 || $ic['y']!=0){
 					if($ic['x']==0){
-						/* TODO  - scale crop code */
+						$ratio = array('x'=>(1/$dims[1])*$dims[0]);
+						$scale =array('x'=>$ic['y']*$ratio['x']);
+						$size=array('x'=>ceil($scale['x']),'y'=>$ic['y']);
 					} elseif($ic['y']==0){
-						/* TODO  - scale crop code */
+						$ratio = array('y'=>(1/$dims[0])*$dims[1]);
+						$scale =array('y'=>$ic['x']*$ratio['y']);
+						$size=array('x'=>$ic['x'],'y'=>ceil($scale['y']));
 					} else {
-						$ratio = array(
-							'x'=>(1/$dims[1])*$dims[0],
-							'y'=>(1/$dims[0])*$dims[1]
-						);
-						$scale =array(
-							'x'=>$ic['y']*$ratio['x'],
-							'y'=>$ic['x']*$ratio['y']
-						);
-						$resize = array(
-							'x'=>$ic['x']-$scale['x'],
-							'y'=>$ic['y']-$scale['y']
-						);
+						$ratio = array('x'=>(1/$dims[1])*$dims[0],'y'=>(1/$dims[0])*$dims[1]);
+						$scale =array('x'=>$ic['y']*$ratio['x'],'y'=>$ic['x']*$ratio['y']);
+						$resize = array('x'=>$ic['x']-$scale['x'],'y'=>$ic['y']-$scale['y']);
 						if($resize['x']<0 || $resize['y']<0){
 							$resize['x']<0 ? $resize='y':$resize='x';
-						} else {
-							$resize['x']>$resize['y'] ? $resize='y':$resize='x';
-						}
-						if($resize['x']){
-							$size=array(
-								'x'=>ceil($scale['x']),
-								'y'=>$ic['y']
-							);
-						} else {
-							$size=array(
-								'x'=>$ic['x'],
-								'y'=>ceil($scale['y'])
-							);
-						}
-						/* TODO - fix black border at bottom of image (scaling is going wrong) */
-						$img = imagecreatefrompng($v["dta"]["src"]."/".$v["dta"]["nme"].".png");
-						$img = imagescale($img, $size['x'], $size['y'],  IMG_BICUBIC);
-						$img = imagecrop($img,array(
-							'x'=>($size['x']-$ic['x'])/2,
-							'y'=>($size['y']-$ic['y'])/2,
-							'width'=>$ic['x'],
-							'height'=>$ic['y']
-						));
+						} else {$resize['x']>$resize['y'] ? $resize='y':$resize='x';}
+						if($resize=='y'){
+							$size=array('x'=>ceil($scale['x']),'y'=>$ic['y']);
+						} else {$size=array('x'=>$ic['x'],'y'=>ceil($scale['y']));}
 					}
+					$timg = imagecreatefrompng($v["dta"]["src"]."/".$v["dta"]["nme"].".png");
+					$timg = imagescale($timg, $size['x'], $size['y']);
+					$img = imagecreatetruecolor($ic['x'], $ic['y']);
+					imagecopy($img, $timg, 0, 0, ($size['x']-$ic['x'])/2, ($size['y']-$ic['y'])/2, $ic['x'], $ic['y']);
 				} else {
 					$img = imagecreatefrompng($v["dta"]["src"]."/".$v["dta"]["nme"].".png");
 				}
-				
 				switch($ic['format']){
 					case "jpg":
-						/* TODO we need to scale / crop / apply effects */
 						imagejpeg($img, $v["dta"]["src"]."/".$this->ImgC->Var->Std->o["bc"][2]."/".$v["dta"]["nme"].".jpg", 80);
 						unlink($v["dta"]["src"]."/".$v["dta"]["nme"].".png");
+						if(isset($timg)){imagedestroy($timg);}
+						imagedestroy($img);
+						if(file_exists($v["dta"]["src"]."/".$this->ImgC->Var->Std->o["bc"][2]."/".$v["dta"]["nme"].".jpg")){
+							header("Location: /".$this->ImgC->Var->Std->o["uri"]);
+						}
 						break;
 					case "png":
+						imagepng($img, $v["dta"]["src"]."/".$this->ImgC->Var->Std->o["bc"][2]."/".$v["dta"]["nme"].".png", 9, PNG_ALL_FILTERS);
+						unlink($v["dta"]["src"]."/".$v["dta"]["nme"].".png");
+						if(isset($timg)){imagedestroy($timg);}
+						imagedestroy($img);
+						if(file_exists($v["dta"]["src"]."/".$this->ImgC->Var->Std->o["bc"][2]."/".$v["dta"]["nme"].".png")){
+							header("Location: /".$this->ImgC->Var->Std->o["uri"]);
+						}
 						break;
 				}
-				imagedestroy($img);
-				/* TODO grab details regarding the IC and create the png/jpg, then destroy the gd image and the actual image */
-				/* finally serve the actual image */
-				//imagejpeg($img, './example.jpeg', 100);
-				//imagedestroy($img);
-				break;
+				die();
 		}
 	}
 }
