@@ -6,10 +6,7 @@
 		<title>Testing the content</title>
 		<link rel="stylesheet" href="<?=$src[0]["cfg"]->o["static"];?>/src/cwv/<?=$src[0]["var"]->mtf(array("typ"=>"css","dta"=>"cwv"));?>.css">
 		<!---<script src="<?=$src[0]["cfg"]->o["static"];?>/src/cke/ckeditor.js"></script>-->
-	</head>
-	
-	<!-- TODO: WHEN LOADING IMAGES IT IS NECESSARY TO USE A TRY_FILES IN THE NGINX CONFIGURATION TO DEAL WITH MISSING IC's -->
-	
+	</head>	
 	<body>
 		
 		<div id="text-holder" contenteditable="true">
@@ -18,7 +15,7 @@
 		<div class="row">
 			<div class="col all25 hgt20" style="background-color:#f00;"></div>
 			<div class="col all25 hgt20" style="background-color:#0f0;"></div>
-			<img width="450" height="481" src="<?=$src[0]["cfg"]->o["static"];?>/src/fiwv/100x100/100.jpg">
+			<img width="100" height="100" src="<?=$src[0]["cfg"]->o["static"];?>/src/fiwv/100x100/100.jpg">
 		</div>
 		<script>
 			/* CKEDITOR.inline(document.getElementById( 'text-holder' )); */
