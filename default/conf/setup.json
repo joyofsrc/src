@@ -1,0 +1,20 @@
+{
+	"hst":"localhost",
+	"dbNme":"src_dev",
+	"dbUsr":"src_dev",
+	"dbPss":"YDGgdvfvvhh/",
+	"dbKey":"dac7984fc481b33d4d14661e42b863eab10247571b7017c2cb595216bd6563cb",
+	"dbPrt":0,
+	"dbSck":"/var/lib/mysql/mysql.sock",
+	"xCache":1,
+	"ttl":86400,
+	"sprUsr":"superuser",
+	"sprPss":"untanka04/",
+	"sprNme":"Wayne Ashley",
+	"cor":["Dta","Std","Var","Usr","ImgC","Pge","Scss"],
+	"lcl":[],
+	"hnySrv":"dnsbl.httpbl.org",
+	"hnyKey":"dqhkjoxlsvgl",
+	"hnyFile":"saledream.php",
+	"static":"http://static.dev.src.server6.ifourhosting.co.uk"
+}
